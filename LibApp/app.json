@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "LibApp",
+    "slug": "LibApp",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
