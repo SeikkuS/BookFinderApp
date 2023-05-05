@@ -64,24 +64,27 @@ export default function App() {
     apiKey: "AIzaSyD-TDjWzfCFVCRxKNYOl67fwHzXSwX_0Qs",
 
     authDomain: "mobilelibapp.firebaseapp.com",
-  
-    projectId: "mobilelibapp",
-  
-    storageBucket: "mobilelibapp.appspot.com",
-  
-    messagingSenderId: "916551904252",
-  
-    appId: "1:916551904252:web:ba6e0ca464bdbe4aa96079",
-  
-    measurementId: "G-Z27MFC60N6"
 
+    projectId: "mobilelibapp",
+
+    storageBucket: "mobilelibapp.appspot.com",
+
+    messagingSenderId: "916551904252",
+
+    appId: "1:916551904252:web:ba6e0ca464bdbe4aa96079",
+
+    measurementId: "G-Z27MFC60N6"
+    
   });
 
-  console.log("auth test")
-  const auth = getAuth(firebaseApp); 
-  console.log("firestore test")
+  console.log("Firebase app initialized");
+
+  const auth = getAuth(firebaseApp);
+  console.log("Auth initialized");
+
   const db = getFirestore(firebaseApp);
-  
+  console.log("Firestore initialized");
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -96,8 +99,12 @@ export default function App() {
   }, [auth]);
 
   if (loading) {
+    console.log("Loading...");
     return null; // or a loading indicator
   }
+
+  console.log("Rendering app...");
+
 
   return (
     <NavigationContainer>
