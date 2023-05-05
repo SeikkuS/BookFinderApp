@@ -29,12 +29,16 @@ export const searchBooks = async (searchTerm) => {
 };
 
 // Function to add a book to the database
-export const addBook = async (bookData) => {
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../App';
+
+const addBookToLibrary = async (book) => {
   try {
-    await db.collection('books').doc().set(bookData);
-    console.log('Book added successfully!');
+    const libraryRef = collection(db, 'library');
+    await addDoc(libraryRef, book);
+    console.log('Book added to library:', book);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 

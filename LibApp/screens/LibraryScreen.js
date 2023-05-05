@@ -1,77 +1,41 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, FlatList } from 'react-native';
-import firebase from 'firebase/app';
-import { getFirestore, collection } from 'firebase/firestore';
-import { firebaseApp } from '../App';
-
+import React, { useState, useEffect } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../App';
+import { View, Text, FlatList } from 'react-native';
 
 export default function LibraryScreen() {
-  const [books, setBooks] = useState([]);
+  const [libraryData, setLibraryData] = useState([]);
 
   useEffect(() => {
-    // Get books from Firebase
-    console.log("getFirestore")
-    const db = getFirestore(firebaseApp);
-    console.log("get collection")
-    db.collection('books')
-      .get()
-      .then((querySnapshot) => {
-        const fetchedBooks = [];
-        querySnapshot.forEach((doc) => {
-          const fetchedBook = { id: doc.id, ...doc.data() };
-          fetchedBooks.push(fetchedBook);
-        });
-        setBooks(fetchedBooks);
-      })
-      .catch((error) => console.log(error));
+    const fetchLibraryData = async () => {
+      const libraryRef = collection(db, 'library');
+      const librarySnap = await getDocs(libraryRef);
+      const libraryData = librarySnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setLibraryData(libraryData);
+    };
+    fetchLibraryData();
   }, []);
 
-  // Render each book item
-  const renderItem = ({ item }) => {
-    return (
-      <TouchableOpacity style={styles.bookContainer}>
-        <Text style={styles.bookTitle}>{item.title}</Text>
-        <Text style={styles.bookAuthor}>{item.author}</Text>
-      </TouchableOpacity>
-    );
-  };
+  const renderItem = ({ item }) => (
+    <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
+      <Text style={{ fontSize: 18 }}>{item.title}</Text>
+      <Text style={{ fontSize: 14 }}>{item.author}</Text>
+    </View>
+  );
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={books}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-        contentContainerStyle={styles.bookList}
-      />
+    <View style={{ flex: 1, padding: 10 }}>
+      <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 10 }}>My Library</Text>
+      {libraryData.length > 0 ? (
+        <FlatList
+          data={libraryData}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          style={{ flex: 1 }}
+        />
+      ) : (
+        <Text style={{ fontSize: 16 }}>Your library is empty.</Text>
+      )}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  bookList: {
-    alignItems: 'stretch',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-  },
-  bookContainer: {
-    backgroundColor: '#eee',
-    borderRadius: 8,
-    padding: 16,
-    marginVertical: 8,
-  },
-  bookTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  bookAuthor: {
-    fontSize: 14,
-    marginTop: 8,
-  },
-});
