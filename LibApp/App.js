@@ -3,9 +3,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Feather } from '@expo/vector-icons';
-import firebase from 'firebase/app';
-import 'firebase/auth'; // Import the auth module from Firebase
-import { firebaseConfig } from './FireBaseConfig'; // Import your Firebase configuration object
+import { initializeApp } from 'firebase/app';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getFirestore, collection, getDocs, getDoc } from 'firebase/firestore';
 
 // Import screens
 import LoginScreen from './screens/LoginScreen';
@@ -59,14 +59,31 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
+  const firebaseApp = initializeApp({
 
-  // Initialize Firebase
+    apiKey: "AIzaSyD-TDjWzfCFVCRxKNYOl67fwHzXSwX_0Qs",
+
+    authDomain: "mobilelibapp.firebaseapp.com",
+  
+    projectId: "mobilelibapp",
+  
+    storageBucket: "mobilelibapp.appspot.com",
+  
+    messagingSenderId: "916551904252",
+  
+    appId: "1:916551904252:web:ba6e0ca464bdbe4aa96079",
+  
+    measurementId: "G-Z27MFC60N6"
+
+  });
+
+  console.log("auth test")
+  const auth = getAuth(firebaseApp); 
+  console.log("firestore test")
+  const db = getFirestore(firebaseApp);
+  
   useEffect(() => {
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-
-    firebase.auth().onAuthStateChanged((user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setIsLoggedIn(true);
       } else {
@@ -74,7 +91,9 @@ export default function App() {
       }
       setLoading(false);
     });
-  }, []);
+
+    return unsubscribe;
+  }, [auth]);
 
   if (loading) {
     return null; // or a loading indicator

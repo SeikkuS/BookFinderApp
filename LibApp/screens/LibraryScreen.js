@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, FlatList } from 'react-native';
-import { firebase } from '../FireBaseConfig';;
+import firebase from 'firebase/app';
+import { getFirestore, collection } from 'firebase/firestore';
+import { firebaseApp } from '../App';
+
 
 export default function LibraryScreen() {
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
     // Get books from Firebase
-    const db = firebase.firestore();
+    console.log("getFirestore")
+    const db = getFirestore(firebaseApp);
+    console.log("get collection")
     db.collection('books')
       .get()
       .then((querySnapshot) => {
