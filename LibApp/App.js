@@ -5,85 +5,55 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Feather } from '@expo/vector-icons';
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, collection, getDocs, getDoc } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
+import { StyleSheet, View, Text } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-// Import screens
 import LoginScreen from './screens/LoginScreen';
-import PlaceholderScreen from './screens/PlaceholderScreen';
 import HomeScreen from './screens/HomeScreen';
 import BooksScreen from './screens/BooksScreen';
 import RecommendedBooksScreen from './screens/RecommendedBooksScreen';
 import LibraryScreen from './screens/LibraryScreen';
 
-// Create navigation stacks for Books and Library screens
 const BooksStack = createStackNavigator();
 const LibraryStack = createStackNavigator();
 
-// Create Books stack navigator
 function BooksStackNavigator() {
   return (
     <BooksStack.Navigator>
-      <BooksStack.Screen
-        name="Books"
-        component={BooksScreen}
-        options={{ headerShown: false }}
-      />
-      <BooksStack.Screen
-        name="Recommended Books"
-        component={RecommendedBooksScreen}
-      />
+      <BooksStack.Screen name="Books" component={BooksScreen} options={{ headerShown: false }} />
+      <BooksStack.Screen name="Recommended Books" component={RecommendedBooksScreen} />
     </BooksStack.Navigator>
   );
 }
 
-// Create Library stack navigator
 function LibraryStackNavigator() {
   return (
     <LibraryStack.Navigator>
-      <LibraryStack.Screen
-        name="Library"
-        component={LibraryScreen}
-        options={{ headerShown: false }}
-      />
-      <LibraryStack.Screen
-        name="Recommended Books"
-        component={RecommendedBooksScreen}
-      />
+      <LibraryStack.Screen name="Library" component={LibraryScreen} options={{ headerShown: false }} />
+      <LibraryStack.Screen name="Recommended Books" component={RecommendedBooksScreen} />
     </LibraryStack.Navigator>
   );
 }
 
-// Create bottom tab navigator
 const Tab = createBottomTabNavigator();
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
+
   const firebaseApp = initializeApp({
-
     apiKey: "AIzaSyD-TDjWzfCFVCRxKNYOl67fwHzXSwX_0Qs",
-
     authDomain: "mobilelibapp.firebaseapp.com",
-
     projectId: "mobilelibapp",
-
     storageBucket: "mobilelibapp.appspot.com",
-
     messagingSenderId: "916551904252",
-
     appId: "1:916551904252:web:ba6e0ca464bdbe4aa96079",
-
     measurementId: "G-Z27MFC60N6"
-    
   });
 
-  console.log("Firebase app initialized");
-
   const auth = getAuth(firebaseApp);
-  console.log("Auth initialized");
-
   const db = getFirestore(firebaseApp);
-  console.log("Firestore initialized");
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -99,21 +69,32 @@ export default function App() {
   }, [auth]);
 
   if (loading) {
-    console.log("Loading...");
     return null; // or a loading indicator
   }
 
-  console.log("Rendering app...");
-
 
   return (
-    <NavigationContainer>
-      {isLoggedIn ? (
-        <Tab.Navigator
+    <SafeAreaProvider>
+      <NavigationContainer>
+        {isLoggedIn ? (
+          <Tab.Navigator
           screenOptions={({ route }) => ({
+            tabBarStyle: {
+              backgroundColor: "#3B4252",
+              paddingTop: 5,
+            },
+            headerStyle: {
+              backgroundColor: "#3B4252"
+            },
+            headerTitleStyle: {
+              fontWeight:'bold',
+              fontSize: 22,
+              color: '#BD93F9'
+            },
+            headerTitleAlign:"center",
             tabBarIcon: ({ color, size }) => {
               let iconName;
-
+        
               if (route.name === 'Home') {
                 iconName = 'home';
               } else if (route.name === 'Books') {
@@ -121,23 +102,48 @@ export default function App() {
               } else if (route.name === 'Library') {
                 iconName = 'book';
               }
-
+        
               return <Feather name={iconName} size={size} color={color} />;
             },
           })}
           tabBarOptions={{
-            activeTintColor: 'tomato',
-            inactiveTintColor: 'gray',
+            activeTintColor: '#BD93F9',
+            inactiveTintColor: '#D8DEE9',
+            style: {
+              backgroundColor: '#D8DEE9',
+              borderTopWidth: 0,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: -2,
+              },
+              shadowOpacity: 0.1,
+              shadowRadius: 1.5,
+            },
+            labelStyle: {
+              fontSize: 14,
+              fontWeight: 'bold',
+              marginBottom: 5,
+            },
           }}
         >
-          <Tab.Screen name="Testing" component={PlaceholderScreen} />
-          <Tab.Screen name="Home" component={HomeScreen} />
-          <Tab.Screen name="Books" component={BooksStackNavigator} />
-          <Tab.Screen name="Library" component={LibraryStackNavigator} />
+          <Tab.Screen
+            name="Home"
+            component={HomeScreen}
+          />
+          <Tab.Screen
+            name="Books"
+            component={BooksStackNavigator}
+          />
+          <Tab.Screen
+            name="Library"
+            component={LibraryStackNavigator}
+          />
         </Tab.Navigator>
-      ) : (
-        <LoginScreen />
-      )}
-    </NavigationContainer>
+        ) : (
+          <LoginScreen />
+        )}
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
