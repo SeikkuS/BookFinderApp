@@ -12,7 +12,6 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import BooksScreen from './screens/BooksScreen';
-import RecommendedBooksScreen from './screens/RecommendedBooksScreen';
 import LibraryScreen from './screens/LibraryScreen';
 
 const BooksStack = createStackNavigator();
@@ -22,7 +21,6 @@ function BooksStackNavigator() {
   return (
     <BooksStack.Navigator>
       <BooksStack.Screen name="Books" component={BooksScreen} options={{ headerShown: false }} />
-      <BooksStack.Screen name="Recommended Books" component={RecommendedBooksScreen} />
     </BooksStack.Navigator>
   );
 }
@@ -31,7 +29,6 @@ function LibraryStackNavigator() {
   return (
     <LibraryStack.Navigator>
       <LibraryStack.Screen name="Library" component={LibraryScreen} options={{ headerShown: false }} />
-      <LibraryStack.Screen name="Recommended Books" component={RecommendedBooksScreen} />
     </LibraryStack.Navigator>
   );
 }

@@ -46,7 +46,7 @@ export default function BooksScreen() {
           <Text style={{ fontSize: 12 }}>{book.publisher}</Text>
           <TouchableOpacity
             onPress={handleAddToLibrary}
-            style={{ backgroundColor: '#007bff', padding: 10, borderRadius: 5, alignItems: 'center', marginTop: 10 }}
+            style={{ backgroundColor: '#BD93F9', padding: 10, borderRadius: 5, alignItems: 'center', marginTop: 10 }}
           >
             <Text style={{ color: '#fff' }}>Add to Library</Text>
           </TouchableOpacity>
@@ -56,16 +56,16 @@ export default function BooksScreen() {
   };
 
   return (
-    <View style={{ flex: 1, padding: 10 }}>
+    <View style={{ flex: 1, padding: 10, backgroundColor:"#3B4252" }}>
       <TextInput
         placeholder="Search books"
         value={query}
         onChangeText={setQuery}
-        style={{ borderWidth: 1, borderColor: '#ccc', padding: 10, marginBottom: 10 }}
+        style={{ borderWidth: 1, borderColor: '#ccc', padding: 10, marginBottom: 10, backgroundColor:"#81A1C1" }}
       />
       <TouchableOpacity
         onPress={handleSearch}
-        style={{ backgroundColor: '#007bff', padding: 10, borderRadius: 5, alignItems: 'center' }}
+        style={{ backgroundColor: '#BD93F9', padding: 10, borderRadius: 5, alignItems: 'center' }}
       >
         <Text style={{ color: '#fff' }}>Search</Text>
       </TouchableOpacity>
@@ -73,7 +73,9 @@ export default function BooksScreen() {
         data={books}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-        style={{ flex: 1 }}
+        style={{ flex: 1,
+                 backgroundColor:"#81A1C1",
+                 color: "#BD93F9" }}
       />
     </View>
   );
