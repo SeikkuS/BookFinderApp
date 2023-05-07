@@ -3,14 +3,11 @@ import {
   collection,
   onSnapshot,
   getDocs,
-  getFirestore,
   doc,
   updateDoc,
 } from 'firebase/firestore';
-import { firebaseApp } from '../App';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { db } from '../App';
 
 // Create a Firestore instance using firebaseApp
 

@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { collection, getDocs, doc } from 'firebase/firestore';
-import { db } from '../App';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, Image } from 'react-native';
 import { addBookToLibrary } from "../dbFunctions";
 // API KEY 
