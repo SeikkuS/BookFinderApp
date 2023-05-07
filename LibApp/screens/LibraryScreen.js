@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, getFirestore, doc, updateDoc } from 'firebase/firestore';
+import {
+  collection,
+  onSnapshot,
+  getDocs,
+  getFirestore,
+  doc,
+  updateDoc,
+} from 'firebase/firestore';
 import { firebaseApp } from '../App';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { db } from '../App';
 
 // Create a Firestore instance using firebaseApp
-const db = getFirestore(firebaseApp);
 
-export default function LibraryScreen() {
+export default function LibraryScreen({ db }) {
   const [libraryData, setLibraryData] = useState([]);
   const [favorites, setFavorites] = useState([]);
 
@@ -15,10 +22,19 @@ export default function LibraryScreen() {
     const fetchLibraryData = async () => {
       const libraryRef = collection(db, 'library');
       const librarySnap = await getDocs(libraryRef);
-      const libraryData = librarySnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const libraryData = librarySnap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setLibraryData(libraryData);
     };
     fetchLibraryData();
+
+    // Subscribe to changes in the 'library' collection
+    const unsubscribe = onSnapshot(collection(db, 'library'), (snapshot) => {
+      const libraryData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setLibraryData(libraryData);
+    });
+
+    // Unsubscribe from the listener when the component unmounts
+    return () => unsubscribe();
   }, []);
 
   const toggleFavorite = async (item) => {
@@ -50,22 +66,20 @@ export default function LibraryScreen() {
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={{
-        backgroundColor: "#2E3440",
+        backgroundColor: '#2E3440',
         padding: 16,
         marginBottom: 10,
         borderRadius: 8,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
       }}
       activeOpacity={0.7}
       onPress={() => console.log(item)}
     >
       <View style={{ marginRight: 16 }}>
-        <Text style={{ color: "#D8DEE9", fontSize: 18 }}>{item.title}</Text>
-        <Text style={{ color: "#81A1C1", fontSize: 14, marginTop: 4 }}>
-          By: {item.authors}
-        </Text>
+        <Text style={{ color: '#D8DEE9', fontSize: 18 }}>{item.title}</Text>
+        <Text style={{ color: '#81A1C1', fontSize: 14, marginTop: 4 }}>By: {item.authors}</Text>
       </View>
       <TouchableOpacity onPress={() => toggleFavorite(item)}>
         {item.favorite ? (

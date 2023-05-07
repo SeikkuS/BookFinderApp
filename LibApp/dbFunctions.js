@@ -1,7 +1,5 @@
 import { getFirestore, doc, setDoc, collection, addDoc} from 'firebase/firestore';
-import { firebaseApp } from './App';
-
-const db = getFirestore(firebaseApp);
+import { firebaseApp, db } from './App';
 
 // Function to search books using the Google Books API
 

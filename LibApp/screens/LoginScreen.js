@@ -1,25 +1,27 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { firebase } from "firebase/app";
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from "../App";
+import { useNavigation } from '@react-navigation/native';
 
-const LoginScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    const auth = getAuth();
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        console.log(user);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorMessage);
-      });
+
+export default function LoginScreen() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const navigation = useNavigation();
+
+  const handleLogin = async () => {
+    try {
+      setLoading(true);
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -29,7 +31,7 @@ const LoginScreen = () => {
         style={styles.input}
         placeholder="Email"
         value={email}
-        onChangeText={(text) => setEmail(text)}
+        onChangeText={setEmail}
         autoCapitalize="none"
         keyboardType="email-address"
       />
@@ -37,54 +39,69 @@ const LoginScreen = () => {
         style={styles.input}
         placeholder="Password"
         value={password}
-        onChangeText={(text) => setPassword(text)}
+        onChangeText={setPassword}
         secureTextEntry
       />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
+      {error && <Text style={styles.error}>{error}</Text>}
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleLogin}
+        disabled={loading}
+      >
+        <Text style={styles.buttonText}>{loading ? 'Loading...' : 'Log In'}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+        <Text style={styles.signupText}>Don't have an account? Sign Up</Text>
       </TouchableOpacity>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#3B4252",
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: "#3B4252"
   },
   title: {
-    fontSize: 48,
-    fontWeight: "bold",
+    fontSize: 28,
+    fontWeight: 'bold',
     marginBottom: 20,
     color: "#BD93F9"
   },
   input: {
-    width: "80%",
-    height: 40,
-    borderColor: "#ccc",
+    width: '100%',
+    height: 50,
+    borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
-    backgroundColor: "#81A1C1",
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    marginBottom: 20,
+    backgroundColor: "#81A1C1"
   },
   button: {
-    width: "80%",
-    height: 40,
-    backgroundColor: "#BD93F9",
-    borderRadius: 5,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 10,
-    color: ""
+    width: '100%',
+    height: 50,
+    backgroundColor: '#BD93F9',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  error: {
+    color: 'red',
+    marginBottom: 10,
+  },
+
+  signupText: {
+    color: '#BD93F9',
+    marginTop: 20,
+    
   },
 });
-
-export default LoginScreen;

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { collection, getDocs, doc } from 'firebase/firestore';
 import { db } from '../App';
 import { View, Text, TextInput, TouchableOpacity, FlatList, Image } from 'react-native';
-import BookItem from "../BookItem";
 import { addBookToLibrary } from "../dbFunctions";
 // API KEY 
 const API_KEY = 'AIzaSyBMTdJFDO3m2t1TzCXjTHMjUVgnDVIKd8c';
@@ -35,7 +34,7 @@ export default function BooksScreen() {
     };
   
     return (
-      <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
+      <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10, backgroundColor: "#81A1C1" }}>
         <Image
           source={{ uri: book.imageLinks?.thumbnail || 'https://via.placeholder.com/150x200.png?text=No+Image' }}
           style={{ width: 80, height: 120 }}
@@ -74,7 +73,7 @@ export default function BooksScreen() {
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         style={{ flex: 1,
-                 backgroundColor:"#81A1C1",
+                 backgroundColor:"#3B4252",
                  color: "#BD93F9" }}
       />
     </View>
