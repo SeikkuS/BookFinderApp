@@ -7,6 +7,8 @@
 - Firebase (Firestore and Authentication)
 - React-Navigation
 
+## Description
+
 This App was made for a course handling Mobile App programming. 
 
 The app uses fetch functions to search for data on books with a search term from the Google Books API. Accessing the API requires an API-key which I acquired through the Google Cloud Console by registering my project and requesting an API-Key for the correct API through it.
