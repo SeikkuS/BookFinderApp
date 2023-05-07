@@ -17,7 +17,7 @@ The authentication is a simple email and password access, that you can register 
 
 The application has a simple bottom screen nav bar the user can use to navigate between 3 pages.
 
-Sources:
+## Sources:
 
 Firebase Documentation: https://firebase.google.com/docs
 
